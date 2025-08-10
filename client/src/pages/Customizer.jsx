@@ -27,7 +27,13 @@ const Customizer = () => {
     stylishShirt: false,
   });
 
-  // Show tab content depending on the active tab
+  // Dummy AI submit function (no server)
+  const handleSubmit = (type) => {
+    alert(
+      "Image generation failed because OpenAI is not free and I'm not about to pay for that in a demo project. This is just to show my ability to add server-side features such as AI generation :)"
+    );
+  };
+
   const generateTabContent = () => {
     switch (activeEditorTab) {
       case "colorpicker":
@@ -45,41 +51,6 @@ const Customizer = () => {
         );
       default:
         return null;
-    }
-  };
-
-  const handleSubmit = async (type) => {
-    if (!prompt) return alert("Please enter a prompt");
-
-    try {
-      setGeneratingImg(true);
-
-      const response = await fetch("http://localhost:8080/api/v1/dalle", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          prompt,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to generate image: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-
-      // data.image should already be base64 from backend
-      handleDecals(type, `data:image/png;base64,${data.image}`);
-    } catch (error) {
-      console.error(error);
-      alert(
-        "Image generation failed because OpenAI is not free and I'm not about to pay for that. This is just to show my ability to add AI features :)"
-      );
-    } finally {
-      setGeneratingImg(false);
-      setActiveEditorTab("");
     }
   };
 
@@ -123,7 +94,7 @@ const Customizer = () => {
     <AnimatePresence>
       {!snap.intro && (
         <>
-          {/* Editor Tabs (Left side) */}
+          {/* Editor Tabs */}
           <motion.div
             key="custom"
             className="absolute top-0 left-0 z-10"
@@ -138,7 +109,6 @@ const Customizer = () => {
                     handleClick={() => setActiveEditorTab(tab.name)}
                   />
                 ))}
-
                 {generateTabContent()}
               </div>
             </div>
@@ -157,7 +127,7 @@ const Customizer = () => {
             />
           </motion.div>
 
-          {/* Filter Tabs + Download */}
+          {/* Filter Tabs */}
           <motion.div
             className="filtertabs-container"
             {...slideAnimation("up")}
