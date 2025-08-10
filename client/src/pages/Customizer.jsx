@@ -54,11 +54,14 @@ const Customizer = () => {
     try {
       setGeneratingImg(true);
 
-      // Now hitting Stability AI instead of DALL·E
-      const response = await fetch("http://localhost:8080/api/v1/stability", {
+      const response = await fetch("http://localhost:8080/api/v1/dalle", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt,
+        }),
       });
 
       if (!response.ok) {
